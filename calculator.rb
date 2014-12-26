@@ -5,12 +5,16 @@
 # 3. split numbers and operators, do math calculating and output result
 # 4. ask if user want do again
 
+require 'pry'
+
 def say(msg)
   puts "=> #{msg}"
 end
 
 def do_calculation(str)
+  
   result = check_calculation_valid(str)
+
   return result if result == nil
 
   result = do_operator()
@@ -18,6 +22,12 @@ def do_calculation(str)
 end
 
 def check_calculation_valid(str)
+  
+
+  new_str = str.gsub(/[+-*\/]/) { |s| " #{s} "}
+
+  arr = str.split(' ')
+
 
 end
 
