@@ -24,7 +24,7 @@ end
 def check_calculation_valid(str)
   
 
-  new_str = str.gsub(/[+-*\/]/) { |s| " #{s} "}
+  new_str = str.gsub(/[\+\-\*\/]/) { |s| " #{s} "}
 
   arr = str.split(' ')
 
@@ -46,7 +46,7 @@ begin
     say "Result = #{result}"
   end
 
-  prints "\n"
+  puts "\n"
   say "Want to do calculation again?"
   say "Y) Continue. N) Exit."
 end while gets.chomp.upcase == 'Y'
