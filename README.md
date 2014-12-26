@@ -1,6 +1,4 @@
 tealeaf
 =======
 
-Introduction to Programming with Ruby
-
-The Finla Exercise is in Directory: exercise
+The First Book Exercise is in Directory: `First Book`
