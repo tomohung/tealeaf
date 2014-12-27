@@ -11,42 +11,57 @@ def say(msg)
   puts "=> #{msg}"
 end
 
-def do_calculation(str)
-  
-  result = check_calculation_valid(str)
-
-  return result if result == nil
-
-  result = do_operator()
-
+def output_result(msg)
+  puts "@@@@@ #{msg} @@@@@"
+  puts "\n"
 end
 
-def check_calculation_valid(str)
-  
-
-  new_str = str.gsub(/[\+\-\*\/]/) { |s| " #{s} "}
-
-  arr = str.split(' ')
-
-
+def numeric?(lookAhead)
+  lookAhead =~ /[[:digit:]]/
 end
 
-def do_operator()
+def do_calculation
+  
+  say "Input your first number:"
+  first_number = gets.chomp
+  return nil, nil if !numeric?(first_number)
 
+  say "Input your operator [+-*/] :"
+  operator = gets.chomp
+  test_operator = operator =~ /[\+\-\*\/]/ 
+  
+  return nil, nil if test_operator == false
+
+  say "Input your second number:"
+  second_number = gets.chomp
+  return nil, nil if !numeric?(second_number) 
+
+  input = "#{first_number} #{operator} #{second_number}"
+
+  case operator
+  when "+"
+    result = first_number.to_i + second_number.to_i
+  when "-"
+    result = first_number.to_i - second_number.to_i
+  when "*"
+    result = first_number.to_i * second_number.to_i
+  when "/"
+    result = first_number.to_f / second_number.to_i
+  end
+
+  return input, result
 end
 
 begin
-  say "A calculator for +-*/"
-  say "Input your calculation and press [ENTER] key:"
-  result = do_calculation(gets.chomp)
+  say "A simple calculator for two number to do [+ - * /] calculation"
+  input, result = do_calculation
 
   if result == nil
-    say "[Error] In-correct calculation!"
+    output_result "[Error] In-correct calculation!"
   else
-    say "Result = #{result}"
+    output_result " #{input} = #{result} "
   end
 
-  puts "\n"
   say "Want to do calculation again?"
-  say "Y) Continue. N) Exit."
+  say "Y) Yes to Continue. N) Any key to Exit."
 end while gets.chomp.upcase == 'Y'
