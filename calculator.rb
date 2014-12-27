@@ -2,7 +2,7 @@
   
 # 1. user input the calculate number and operator
 # 2. limit to only "Add", "Substract", "Multiply", "Divide"
-# 3. split numbers and operators, do math calculating and output result
+# 3. input numbers and operators, do math calculating and output result
 # 4. ask if user want do again
 
 require 'pry'
