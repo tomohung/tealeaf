@@ -72,19 +72,46 @@ def user_pick_square(input_hash)
 end
 
 def computer_pick_square(input_hash)
-  (1..9).to_a.each do |x|
-    if input_hash[x] == nil
-      input_hash[x] = COMPUTER_PICK
-      break
+  
+  choose_number = 0
+  last_result = 3
+  result_hash = {}
+
+  (1..9).to_a.each do |index|
+    result = 0
+    if input_hash[index].nil?
+      THREE_LINE_SET.each do |set|
+        if set.include?(index)
+          set.each do |val|
+            if input_hash[val].nil?
+              result += COMPUTER_PICK
+            else
+              result += input_hash[val]
+            end
+          end
+        end
+      end
+      result_hash[index] = result
     end
   end 
+
+puts result_hash
+gets
+
+  result_hash.each do |key, value|
+    if value < last_result
+      last_result = value
+      choose_number = key
+    end
+  end
+
+  input_hash[choose_number] = COMPUTER_PICK
 end
 
 def game_is_over?(input_hash)
   unchoosen_array = (1..9).to_a.select {|x| input_hash[x].nil? }
   return TIE_GAME if unchoosen_array.empty?
 
-  result = nil
   THREE_LINE_SET.each do |set|
     
     result = 0
@@ -92,8 +119,8 @@ def game_is_over?(input_hash)
       if input_hash.has_key?(x)
         result += input_hash[x]
       end
-      return USER_PICK if result == 3 
-      return COMPUTER_PICK if result == -3
+      return USER_PICK if result == 3 * USER_PICK 
+      return COMPUTER_PICK if result == 3 * COMPUTER_PICK
     end
   end
 
