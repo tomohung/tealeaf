@@ -33,12 +33,12 @@ def show_tic_tac_toe_figure(input_hash)
   end
 
   puts "
-   #{output(input_hash[1])} | #{output(input_hash[2])} | #{output(input_hash[3])}  
-  ---+---+---
-   #{output(input_hash[4])} | #{output(input_hash[5])} | #{output(input_hash[6])}  
-  ---+---+---
-   #{output(input_hash[7])} | #{output(input_hash[8])} | #{output(input_hash[9])}  
-  "
+     #{output(input_hash[1])} | #{output(input_hash[2])} | #{output(input_hash[3])}  
+    ---+---+---
+     #{output(input_hash[4])} | #{output(input_hash[5])} | #{output(input_hash[6])}  
+    ---+---+---
+     #{output(input_hash[7])} | #{output(input_hash[8])} | #{output(input_hash[9])}  
+   "
 end
 
 def user_pick_square(input_hash)
