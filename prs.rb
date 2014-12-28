@@ -1,24 +1,27 @@
 # Paper, Rock, Scissors
 
-puts "Game: Paper Rock Scissors"
-puts "--------------------------"
-
-prs = ["P", "R", "S"]
-prs_fullname = ["Paper", "Rock", "Scissors"]
+PRS_SET = {"P" => "Paper", "R" => "Rock", "S" => "Scissors"}
+PRS_SET_INDEX = {"P" => 1, "R" => 2, "S" => 3} 
 
 begin
+  system("clear")
+  puts "Game: Paper Rock Scissors"
+  puts "--------------------------"
+
   puts "Choose one P)Paper, R)Rock, S)Scissors"
   user_input = gets.chomp.upcase
-  user_input_index = prs.index(user_input)
   
-  if user_input_index == nil
+  if PRS_SET.has_key?(user_input) == false
     puts "[Error] Choose again."
     redo
   end
 
-  computer_input_index = rand(2)
+  computer_input = PRS_SET.keys.sample 
 
-  puts "You: #{prs_fullname[user_input_index]} vs Computer: #{prs_fullname[computer_input_index]}"
+  puts "You: #{PRS_SET[user_input]} vs Computer: #{PRS_SET[computer_input]}"
+
+  user_input_index = PRS_SET_INDEX[user_input]
+  computer_input_index = PRS_SET_INDEX[computer_input] 
 
   case 
   when user_input_index == computer_input_index
