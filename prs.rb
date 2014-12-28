@@ -1,7 +1,6 @@
 # Paper, Rock, Scissors
 
 PRS_SET = {"P" => "Paper", "R" => "Rock", "S" => "Scissors"}
-PRS_SET_INDEX = {"P" => 1, "R" => 2, "S" => 3} 
 
 begin
   system("clear")
@@ -20,8 +19,8 @@ begin
 
   puts "You: #{PRS_SET[user_input]} vs Computer: #{PRS_SET[computer_input]}"
 
-  user_input_index = PRS_SET_INDEX[user_input]
-  computer_input_index = PRS_SET_INDEX[computer_input] 
+  user_input_index = PRS_SET.keys.index(user_input)
+  computer_input_index = PRS_SET.keys.index(computer_input)
 
   case 
   when user_input_index == computer_input_index
