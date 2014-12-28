@@ -16,27 +16,7 @@ def output_result(msg)
   puts "\n"
 end
 
-def numeric?(lookAhead)
-  lookAhead =~ /[[:digit:]]/
-end
-
-def do_calculation
-  
-  say "Input your first number:"
-  first_number = gets.chomp
-  return nil, nil if !numeric?(first_number)
-
-  say "Input your operator [+-*/] :"
-  operator = gets.chomp
-  test_operator = operator =~ /[\+\-\*\/]/ 
-  
-  return nil, nil if test_operator == false
-
-  say "Input your second number:"
-  second_number = gets.chomp
-  return nil, nil if !numeric?(second_number) 
-
-  input = "#{first_number} #{operator} #{second_number}"
+def do_calculation(first_number, operator, second_number)
 
   case operator
   when "+"
@@ -48,19 +28,44 @@ def do_calculation
   when "/"
     result = first_number.to_f / second_number.to_i
   end
-
-  return input, result
 end
 
-begin
-  say "A simple calculator for two number to do [+ - * /] calculation"
-  input, result = do_calculation
-
-  if result == nil
-    output_result "[Error] In-correct calculation!"
+def check_input_number?(str)
+  check = str =~ /[[:digit:]]/
+  if check
+    return true
   else
-    output_result " #{input} = #{result} "
+    say "Input Error"
+    return false
   end
+end
+
+say "A simple calculator for two number to do [+ - * /] calculation"
+
+begin
+
+  begin
+    say "Input your first number:"
+    first_number = gets.chomp
+  end until check_input_number?(first_number)
+
+  begin
+    say "Input your operator [+-*/] :"
+    operator = gets.chomp
+    test_operator = operator =~ /[\+\-\*\/]/ 
+    say "Input Error" if !test_operator 
+  end until test_operator 
+  
+  begin 
+    say "Input your second number:"
+    second_number = gets.chomp
+  end until check_input_number?(second_number)
+
+  input = "#{first_number} #{operator} #{second_number}"
+
+  result = do_calculation(first_number, operator, second_number)
+
+  output_result " #{input} = #{result} "
 
   say "Want to do calculation again?"
   say "Y) Yes to Continue. N) Any key to Exit."
