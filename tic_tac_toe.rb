@@ -6,9 +6,9 @@
 # 4. show result if game is over
 # 5. play again?
 
-require 'pry'
-
-THREE_LINE_SET = [[1, 2, 3],[4, 5, 6],[7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
+THREE_LINE_SET = [[1, 2, 3], [4, 5, 6], [7, 8, 9], 
+                  [1, 4, 7], [2, 5, 8], [3, 6, 9], 
+                  [1, 5, 9], [3, 5, 7]]
 COMPUTER_PICK = -1
 USER_PICK = 1
 TIE_GAME = 0
@@ -30,7 +30,7 @@ end
 
 def show_tic_tac_toe_figure(input_hash)
 
-  if input_hash.count == 0
+  if input_hash.empty?
     puts "
      1 | 2 | 3
     ---+---+---
@@ -63,7 +63,7 @@ def user_pick_square(input_hash)
     end
 
     if input_hash[input.to_i]
-      say "#{input} Has Choosen!"
+      say "Index #{input} Has been choosen!"
       redo
     end
 
@@ -73,9 +73,9 @@ end
 
 def get_number_to_win(input_hash, role)
   (1..9).to_a.each do |index|
-    result = 0
     if input_hash[index].nil?
       THREE_LINE_SET.each do |set|
+        result = 0
         if set.include?(index)
           set.each do |element|
             if element == index
@@ -87,41 +87,18 @@ def get_number_to_win(input_hash, role)
             end
           end
         end
+        return index if result == 3 * role
       end
     end
-    return index if result == 3 * role
   end
 
   return 0 #if there is no any match
 end
 
-def computer_pick_square(input_hash)
-  
-  choose_number = 0
-
-  # 1. pick number to let computer get a straight line
-  choose_number = get_number_to_win(input_hash, COMPUTER_PICK)
-
-binding.pry
-
-  if choose_number > 0
-    input_hash[choose_number] = COMPUTER_PICK
-    return 
-  end
-
-  # 2. pick number to prevent user get a straight line
-  choose_number = get_number_to_win(input_hash, USER_PICK)
-
-binding.pry
-
-  if choose_number > 0
-    input_hash[choose_number] = COMPUTER_PICK
-    return 
-  end
-
-  # 3. pick number to get a maximum possible win number
-  last_result = 3
+def get_number_to_possible_win(input_hash, role)
+  last_result = 0
   result_hash = {}
+  choose_number = 0
 
   (1..9).to_a.each do |index|
     result = 0
@@ -130,7 +107,7 @@ binding.pry
         if set.include?(index)
           set.each do |element|
             if input_hash[element].nil?
-              result += COMPUTER_PICK
+              result += role
             else
               result += input_hash[element]
             end
@@ -142,11 +119,43 @@ binding.pry
   end 
 
   result_hash.each do |key, value|
-    if value < last_result
+    if value * role > last_result
       last_result = value
       choose_number = key
     end
   end
+
+  return choose_number
+end
+
+def computer_pick_square(input_hash)
+  
+  choose_number = 0
+
+  # 1. pick number to let computer get a straight line
+  choose_number = get_number_to_win(input_hash, COMPUTER_PICK)
+  if choose_number > 0
+    input_hash[choose_number] = COMPUTER_PICK
+    return 
+  end
+  
+  # 2. pick number to prevent user get a straight line
+  choose_number = get_number_to_win(input_hash, USER_PICK)
+
+  if choose_number > 0
+    input_hash[choose_number] = COMPUTER_PICK
+    return 
+  end
+
+  # 3. pick number to prevent user get a maximum possible win
+  choose_number = get_number_to_possible_win(input_hash, USER_PICK)
+  if choose_number > 0
+    input_hash[choose_number] = COMPUTER_PICK
+    return
+  end
+
+  # 4. pick number to let computer get a maximum possible win
+  choose_number = get_number_to_possible_win(input_hash, COMPUTER_PICK)
 
   input_hash[choose_number] = COMPUTER_PICK
 end
