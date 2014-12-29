@@ -15,7 +15,7 @@ require 'pry'
 
 CARDS = { "A" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7,
           "8" => 8, "9" => 9, "10" => 10, "J" => 10, "Q" => 10, "K" => 10}
-SYMBOLS = {"♣" => 0, "♦" => 1, "♥" => 2, "♠" => 3}
+SUITES = {"♣" => 0, "♦" => 1, "♥" => 2, "♠" => 3}
 
 def say(message)
   puts "=> #{message}"
@@ -24,7 +24,7 @@ end
 def get_deck(pokers_count = 1)
   deck = []
   pokers_count.times do 
-    SYMBOLS.keys.each do |symbol|
+    SUITES.keys.each do |symbol|
       CARDS.keys.each do |card|
         deck.push([symbol, card])
       end
@@ -46,7 +46,7 @@ def game_start(deck, player, host)
   end
 end
 
-def show_desk_card(player, host)
+def show_desk_card(player, host, host_card_hidden = true)
   system("clear")
   puts "------------- [DECK] --------------"
   puts "    Player's    vs    Host's"
@@ -55,6 +55,7 @@ def show_desk_card(player, host)
   count.times do |index|
     player_card = index < player.count ? player[index] : ""
     host_card = index < host.count ? host[index] : ""
+    host_card = "* hidden" if host_card_hidden && index == 0
 
     puts "   #{player_card}        #{host_card}"
   end
@@ -76,7 +77,7 @@ end
 system("clear")
 say "Welcom to Tomo's Black Jack Game"
 puts "" 
-say "press ANY key to start..."
+say "press [RETURN] key to start..."
 gets
 
 begin
@@ -86,6 +87,7 @@ begin
 
   game_start(deck, player, host)
   show_desk_card(player, host)
+
 
   ask_player_hit(deck, player)
 
