@@ -71,61 +71,75 @@ def user_pick_square(input_hash)
   end until input_hash[input.to_i]
 end
 
-def get_number_to_win(input_hash, role)
+def get_winning_score(input_hash, set, index, role)
+  score = 0
+  set.each do |element|
+    if element == index
+      score += role
+    elsif input_hash[element].nil?
+      next
+    else
+      score += input_hash[element]
+    end
+  end
+  return score
+end
+
+def pick_number_to_win(input_hash, role)
   (1..9).to_a.each do |index|
     if input_hash[index].nil?
       THREE_LINE_SET.each do |set|
-        result = 0
         if set.include?(index)
-          set.each do |element|
-            if element == index
-              result += role
-            elsif input_hash[element].nil?
-              next
-            else
-              result += input_hash[element]
-            end
-          end
+          score = get_winning_score(input_hash, set, index, role)
+          return index if score == 3 * role
         end
-        return index if result == 3 * role
       end
     end
   end
-
   return 0 #if there is no any match
 end
 
-def get_number_to_possible_win(input_hash, role)
-  last_result = 0
-  result_hash = {}
-  choose_number = 0
-
-  (1..9).to_a.each do |index|
-    result = 0
-    if input_hash[index].nil?
-      THREE_LINE_SET.each do |set|
-        if set.include?(index)
-          set.each do |element|
-            if input_hash[element].nil?
-              result += role
-            else
-              result += input_hash[element]
-            end
-          end
-        end
-      end
-      result_hash[index] = result
+def get_possible_winning_score(input_hash, set, role)
+  score = 0
+  set.each do |element|
+    if input_hash[element].nil?
+      score += role
+    else
+      score += input_hash[element]
     end
-  end 
+  end
+  return score
+end
 
+def retrieve_possible_winning_number(result_hash, role)
+  last_result = 0
+  choose_number = 0
   result_hash.each do |key, value|
     if value * role > last_result
       last_result = value
       choose_number = key
     end
   end
-
   return choose_number
+end  
+
+def pick_number_to_possible_win(input_hash, role)
+  result_hash = {}
+  (1..9).to_a.each do |index|
+    result = 0
+    
+    if input_hash[index].nil?
+      THREE_LINE_SET.each do |set|
+        if set.include?(index)
+          set.each do |element|
+            input_hash[element].nil? ? result += role : result += input_hash[element]
+          end
+        end
+      end
+      result_hash[index] = result
+    end
+  end 
+  return retrieve_possible_winning_number(result_hash, role)
 end
 
 def computer_pick_square(input_hash)
@@ -133,14 +147,14 @@ def computer_pick_square(input_hash)
   choose_number = 0
 
   # 1. pick number to let computer get a straight line
-  choose_number = get_number_to_win(input_hash, COMPUTER_PICK)
+  choose_number = pick_number_to_win(input_hash, COMPUTER_PICK)
   if choose_number > 0
     input_hash[choose_number] = COMPUTER_PICK
     return 
   end
   
   # 2. pick number to prevent user get a straight line
-  choose_number = get_number_to_win(input_hash, USER_PICK)
+  choose_number = pick_number_to_win(input_hash, USER_PICK)
 
   if choose_number > 0
     input_hash[choose_number] = COMPUTER_PICK
@@ -148,15 +162,14 @@ def computer_pick_square(input_hash)
   end
 
   # 3. pick number to prevent user get a maximum possible win
-  choose_number = get_number_to_possible_win(input_hash, USER_PICK)
+  choose_number = pick_number_to_possible_win(input_hash, USER_PICK)
   if choose_number > 0
     input_hash[choose_number] = COMPUTER_PICK
     return
   end
 
   # 4. pick number to let computer get a maximum possible win
-  choose_number = get_number_to_possible_win(input_hash, COMPUTER_PICK)
-
+  choose_number = pick_number_to_possible_win(input_hash, COMPUTER_PICK)
   input_hash[choose_number] = COMPUTER_PICK
 end
 
@@ -175,9 +188,7 @@ def game_is_over?(input_hash)
       return COMPUTER_PICK if result == 3 * COMPUTER_PICK
     end
   end
-
   return false
-
 end
 
 begin
