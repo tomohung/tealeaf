@@ -161,15 +161,15 @@ def computer_pick_square(input_hash)
 end
 
 def game_is_over?(input_hash)
-  unchoosen_array = (1..9).to_a.select {|x| input_hash[x].nil? }
+  unchoosen_array = (1..9).to_a.select {|number| input_hash[number].nil? }
   return TIE_GAME if unchoosen_array.empty?
 
   THREE_LINE_SET.each do |set|
     
     result = 0
-    set.each do |x|
-      if input_hash.has_key?(x)
-        result += input_hash[x]
+    set.each do |number|
+      if input_hash.has_key?(number)
+        result += input_hash[number]
       end
       return USER_PICK if result == 3 * USER_PICK 
       return COMPUTER_PICK if result == 3 * COMPUTER_PICK
@@ -181,23 +181,23 @@ def game_is_over?(input_hash)
 end
 
 begin
-  squares_hash = {}
+  picked_record = {}
   begin
     system("clear")
     say "Welcome to Tomo's Tic-Tac-Toe Game" 
-    show_tic_tac_toe_figure(squares_hash)
+    show_tic_tac_toe_figure(picked_record)
     
-    user_pick_square(squares_hash)
-    check_status = game_is_over?(squares_hash)
+    user_pick_square(picked_record)
+    check_status = game_is_over?(picked_record)
     break if check_status
 
-    computer_pick_square(squares_hash)
-    check_status = game_is_over?(squares_hash)
+    computer_pick_square(picked_record)
+    check_status = game_is_over?(picked_record)
   end until check_status
 
   system("clear")
   say "Result: "
-  show_tic_tac_toe_figure(squares_hash)
+  show_tic_tac_toe_figure(picked_record)
   case check_status
   when TIE_GAME
     say "It's tie"
