@@ -14,10 +14,10 @@
   
   - pointer & reference: when passing a variable to functions(in ruby called: methods), if varaible has prefix like `*` or `&`, it obvious means this variable may be modified in this methods. Ruby doesn't take this way, input variables in method could be modified just by what action do inside the method. Fotunately, ruby usaually append suffix `!` behind method's name to indicate this method modify input variable.
   
-  Last, share my experience for developing game `Black Jack`:
+Last, share my experience for developing game `Black Jack`:
   - psuedo code : 10 min
   - coding : 2 hours
   - debugging : 2 hours more
   - feedback from TA, then refactor: 2 hours
   
-  By the way, the most difficult in Lesson 1 is completing "Tic-Tac-Toe" AI, it tooks me 10 hours more.
+By the way, the most difficult in Lesson 1 is completing "Tic-Tac-Toe" AI, it tooks me 10 hours more.
