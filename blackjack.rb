@@ -37,7 +37,7 @@ def get_deck(pokers_count = 1)
   deck.shuffle
 end
 
-def game_start(deck, player, host)
+def first_round(deck, player, host)
   2.times do
     player.push(deck.pop)
     host.push(deck.pop)
@@ -64,7 +64,7 @@ def show_desk_card(player, host, display_host_card = true)
   system("clear")
   puts "-------------[ DECK ]--------------"
   puts "    Player's    vs    Host's"
-  count = [player.count, host.count].max
+  count = [player.size, host.size].max
 
   count.times do |index|
     player_card = index < player.count ? player[index] : "          "
@@ -149,14 +149,15 @@ puts ""
 say "press [RETURN] key to start..."
 gets
 
-
 loop do
   deck = get_deck(8)
   player = []
   host = []
 
-  game_start(deck, player, host)
+  first_round(deck, player, host)
+  
   player_not_busted = ask_player_hit(deck, player, host)
+  
   ask_host_hit(deck, player, host) if player_not_busted
 
   result = compare_result(player, host)
