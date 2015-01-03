@@ -1,6 +1,3 @@
-# 2 or more players show their decisions: Paper, Rock, Scissors
-# check who are winner or tie or loser.
-
 class Player
 
   PRS_SET = {"P" => "Paper", "R" => "Rock", "S" => "Scissors"}
