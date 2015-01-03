@@ -4,8 +4,7 @@ class Player
   attr_reader :name, :decision
 
   def initialize(name)
-    @name = name
-    @name = "Guest" if name == "" 
+    @name = name.size > 0  ? name : "Guest"
     @decision = "P" 
   end
 
