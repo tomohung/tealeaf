@@ -2,9 +2,11 @@ class Player
 
   PRS_SET = {"P" => "Paper", "R" => "Rock", "S" => "Scissors"}
   attr_reader :name, :decision
+
   def initialize(name)
     @name = name
     @name = "Guest" if name == "" 
+    @decision = "P" 
   end
 
   def display_decision
@@ -41,14 +43,15 @@ user = Player.new(user_name)
 computer = Player.new("Computer")
 
 begin
-  system "clear"
+  system("clear")
   puts "Hi, #{user.name}"
   puts "Welcome to Game: Paper Rock Scissors"
   puts "--------------------------"
 
   puts "Choose one P)Paper, R)Rock, S)Scissors"
-  if !user.set_decision(gets.chomp.upcase)
-    redo
+  loop do 
+    break if user.set_decision(gets.chomp.upcase)
+    puts "Error! Invalid input."
   end
 
   computer.auto_make_decision
