@@ -1,11 +1,11 @@
 class Player
 
   PRS_SET = {"P" => "Paper", "R" => "Rock", "S" => "Scissors"}
-  attr_reader :name, :decision
+  attr_accessor :name, :decision
 
   def initialize(name)
-    @name = name.size > 0  ? name : "Guest"
-    @decision = "P" 
+    self.name = name.empty?  ? "Guest" : name
+    self.decision = PRS_SET.keys.first 
   end
 
   def display_decision
@@ -13,12 +13,12 @@ class Player
   end
 
   def auto_make_decision
-    @decision = PRS_SET.keys.sample
+    self.decision = PRS_SET.keys.sample
   end
 
   def set_decision(decision)
     return false unless PRS_SET.has_key?(decision)
-    @decision = decision
+    self.decision = decision
   end
 
   def match_with(player)
