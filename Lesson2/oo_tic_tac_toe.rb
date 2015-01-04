@@ -14,8 +14,8 @@ class Player
   attr_accessor :name, :picked_numbers
 
   def initialize(name)
-    self.name = name
-    self.picked_numbers = []
+    @name = name
+    @picked_numbers = []
   end
 
   def get_straight_number?
@@ -28,7 +28,7 @@ class Player
       end
       return true if result == set.size
     end
-    return false
+    false
   end
 
   def pick!(valid_numbers)
@@ -39,7 +39,7 @@ class Player
       puts "Input number is invalid, try again..."
     end
     valid_numbers.delete(value)
-    self.picked_numbers << value
+    @picked_numbers << value
   end
 
 end
@@ -60,17 +60,13 @@ class Robot_Player < Player
     
     return unless choose_number    
     valid_numbers.delete(choose_number)
-    self.picked_numbers << choose_number
+    @picked_numbers << choose_number
   end 
    
   def test_straight_line?(test_picked_numbers, test_number)
     TicTacToeRuler::THREE_LINE_SET.each do |set| 
-      if !set.include?(test_number)
-        next
-      end
-      line = set.select do |number| 
-        number == test_number || test_picked_numbers.include?(number)
-      end
+      next if !set.include?(test_number)
+      line = set.select {|number| number == test_number || test_picked_numbers.include?(number)}      
       return true if line.size == set.size
     end
     false
@@ -80,13 +76,12 @@ class Robot_Player < Player
     valid_numbers.each do |number|
       return number if test_straight_line?(picked_numbers, number)
     end
-    return nil #if there is no any match
+    nil
   end
 
   def get_opposite_player_picked_number(valid_numbers)
     TicTacToeRuler::PICK_NUMBERS.select do |number| 
-      !picked_numbers.include?(number) &&
-      !valid_numbers.include?(number)
+      !picked_numbers.include?(number) && !valid_numbers.include?(number)
     end
   end
 
@@ -95,7 +90,7 @@ class Robot_Player < Player
     valid_numbers.each do |number|
       return number if test_straight_line?(opposite_player_picked_numbers, number)
     end
-    return nil
+    nil
   end
 
   def retrieve_possible_win_number(result_hash)
@@ -107,7 +102,7 @@ class Robot_Player < Player
         choose_number = key
       end
     end
-    return choose_number
+    choose_number
   end  
 
   def pick_number_to_possible_win(valid_numbers)
@@ -127,7 +122,7 @@ class Robot_Player < Player
       end
       result_hash[number] = result
     end 
-    return retrieve_possible_win_number(result_hash)
+    retrieve_possible_win_number(result_hash)
   end
 
   def pick_number_to_prevent_double_way(valid_numbers)
@@ -145,7 +140,7 @@ class Robot_Player < Player
       end 
       return number if record >= 2
     end
-    return nil
+    nil
   end
 
 end
@@ -156,10 +151,10 @@ class TicTacToeBoard
 
 private
   def initialize(player1, player2)
-    self.unpicked_numbers = TicTacToeRuler::PICK_NUMBERS.clone
-    self.user1 = player1
-    self.user2 = player2
-    self.current_user = player1
+    @unpicked_numbers = TicTacToeRuler::PICK_NUMBERS.clone
+    @user1 = player1
+    @user2 = player2
+    @current_user = player1
   end
   
   def output_who_picked(value)
@@ -178,8 +173,8 @@ private
 public
 
   def ask_player_to_pick
-    self.current_user.pick!(unpicked_numbers)
-    self.current_user = self.current_user == user1 ? user2 : user1
+    @current_user.pick!(unpicked_numbers)
+    @current_user = current_user == user1 ? user2 : user1
   end
 
   def show_figure
@@ -210,7 +205,7 @@ public
   end
 
   def clear
-    self.unpicked_numbers = TicTacToeRuler::PICK_NUMBERS.clone
+    @unpicked_numbers = TicTacToeRuler::PICK_NUMBERS.clone
     user1.picked_numbers.clear
     user2.picked_numbers.clear
   end  
@@ -239,7 +234,7 @@ class TicTacToeGame
       player2 = Robot_Player.new("Super Tomo")
     end
 
-    self.game_board = TicTacToeBoard.new(player1, player2)
+    @game_board = TicTacToeBoard.new(player1, player2)
   end
 
   def say(message)
@@ -278,5 +273,5 @@ class TicTacToeGame
   end
 end
 
-game = TicTacToeGame.new.play
+TicTacToeGame.new.play
 puts "Exit Tic-Tac-Toe Game"
