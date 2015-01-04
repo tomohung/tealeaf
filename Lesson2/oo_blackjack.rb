@@ -22,7 +22,7 @@ class Player
 
   def get_score
     value = 0
-    cards.each {|card| value += BlackJackRuler::CARD[card[1]]}
+    cards.each {|card| value += BlackJackRuler::CARDS[card[1]]}
     has_card_A = !cards.select {|card| card[1] == "A"}.empty?
     return value unless has_card_A
     value + 10 > BlackJackRuler::BLACKJACK ? value : value + 10
@@ -44,18 +44,27 @@ class Player
   def reset
     @cards = []
   end
+
+  def hit?
+    puts "H) hit. or Anykey to stay:"
+    gets.chomp.downcase == 'h'
+  end
 end
 
-class Dealer < Player
-  def forced_to_hit?
+class RobotPlayer < Player
+  def hit?
     get_score < 17
   end
+end
+
+class Dealer < RobotPlayer
 end
 
 class Cards
   attr_reader :cards
 
   def initialize(poker_count = 1)
+    @cards = []
     poker_count.times do 
       BlackJackRuler::SUITES.values.each do |suite|
         BlackJackRuler::CARDS.keys.each do |card|
@@ -80,22 +89,33 @@ class Deck
   end
 
   def reset
-    @dealer.clear
+    @dealer.reset
     @cards = Cards.new
-    @players.each {|player| player.clear}
+    @players.each {|player| player.reset}
+    deal_initial_cards_to_everyone
   end
 
-  def show
+  def deal_initial_cards_to_everyone
+    2.times do 
+      players.each do |player|
+        cards.deal_a_card(player)
+      end
+      cards.deal_a_card(dealer)
+    end
+  end
+
+  def show(hidden_card = true)
     system("clear")
     puts "<-----------  [ DECK ]  ------------>"
     
-    print "%8s" % dealer.name
+    format_string = "%16s"
+    print format_string % dealer.name
     players.each do |player|
-      print "%8s" % player.name
+      print format_string % player.name
     end
     puts ""
 
-    count = 0
+    count = dealer.cards.size
     players.each do |player| 
       if player.cards.size > count 
         count = player.cards.size
@@ -103,14 +123,23 @@ class Deck
     end
 
     count.times do |index|
-      print "%8s" % dealer.cards[index].to_s
-      players.each {|player| print "%8s" % player.cards[index].to_s}
+      if index == 1 && hidden_card
+        print format_string % "*hidden*"
+      else
+        print format_string % dealer.cards[index].to_s
+      end
+
+      players.each do |player| 
+        print format_string % player.cards[index].to_s
+      end
+      puts ""
     end
 
-    puts ""
-    print "%8d" % dealer.get_score
-    player.each {|player| print "%8d" % player.get_score}
+    puts "\n"
+    print format_string % (hidden_card ? "" : dealer.get_score)
+    players.each {|player| print format_string % player.get_score}
 
+    puts "\n"
     puts "<----------------------------------->"
   end
 
@@ -132,19 +161,27 @@ class BlackJackGame
     @players = []
     say "Players count: (1 ~ 4)"
     players_count = gets.chomp.to_i until (1..4).include?(players_count)
-    players_count.times do |index|
-      say "No.#{index + 1} Player's name:"
-      player_name = gets.chomp 
-      player_name = "Player#{index + 1}" if player_name.empty?
-      @players << Player.new(player_name)
+    
+    say "Player's name:"
+    player_name = gets.chomp
+    player_name = "Player" if player_name.empty?
+    @players << Player.new(player_name)
+
+    (players_count - 1).times do |index|
+      player_name = "PC.#{index + 1}"
+      @players << RobotPlayer.new(player_name)
     end
   end
 
   def play
     loop do
       self.reset
+      
       deck.show
-      #deal_initial_cards_to_everyone
+
+      deck.deal_initial_cards_to_everyone
+
+
       #ask_player_hit_or_stay
       #ask_dealer_hit_or_stay
 
@@ -156,6 +193,7 @@ class BlackJackGame
   def reset
     @deck.reset
   end
+
 
 end
 
