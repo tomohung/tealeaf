@@ -53,7 +53,9 @@ class Robot_Player < Player
     choose_number ||= pick_number_to_win(valid_numbers)
     # 2. pick number to prevent user get a straight line
     choose_number ||= pick_number_to_prevent_lose(valid_numbers)
-    # 3. pick number to get a maximum possible win
+    # 3. pick number to prevent opposite player get a double way
+    choose_number ||= pick_number_to_prevent_double_way(valid_numbers)
+    # 4. pick number to pick a possible win
     choose_number ||= pick_number_to_possible_win(valid_numbers)
     
     return unless choose_number    
@@ -81,19 +83,22 @@ class Robot_Player < Player
     return nil #if there is no any match
   end
 
+  def get_opposite_player_picked_number(valid_numbers)
+    TicTacToeRuler::PICK_NUMBERS.select do |number| 
+      !picked_numbers.include?(number) &&
+      !valid_numbers.include?(number)
+    end
+  end
+
   def pick_number_to_prevent_lose(valid_numbers)
-    opposite_player_picked_number = 
-      TicTacToeRuler::PICK_NUMBERS.select |number| 
-        !picked_numbers.include?(number) &&
-        !valid_numbers.include?(number)
-      end
+    opposite_player_picked_numbers = get_opposite_player_picked_number(valid_numbers)
     valid_numbers.each do |number|
-      return number if test_straight_line?(opposite_player_picked_number, number)
+      return number if test_straight_line?(opposite_player_picked_numbers, number)
     end
     return nil
   end
 
-  def retrieve_possible_winning_number(result_hash)
+  def retrieve_possible_win_number(result_hash)
     last_result = 0
     choose_number = 0
     result_hash.each do |key, value|
@@ -107,9 +112,11 @@ class Robot_Player < Player
 
   def pick_number_to_possible_win(valid_numbers)
     result_hash = {}
+
     valid_numbers.each do |number|
       result = 0     
       TicTacToeRuler::THREE_LINE_SET.each do |set|      
+        next unless set.include?(number)        
         set.each do |element|
           if !valid_numbers.include?(element) && !picked_numbers.include?(element)
             result -= 1
@@ -122,6 +129,25 @@ class Robot_Player < Player
     end 
     return retrieve_possible_win_number(result_hash)
   end
+
+  def pick_number_to_prevent_double_way(valid_numbers)
+    opposite_player_picked_numbers = get_opposite_player_picked_number(valid_numbers)
+
+    valid_numbers.each do |number|  
+      record = 0
+      TicTacToeRuler::THREE_LINE_SET.each do |set|            
+        next if !set.include?(number)
+        
+        if !set.select {|element| opposite_player_picked_numbers.include?(element)}.empty? &&
+          set.select {|element| picked_numbers.include?(element)}.empty?
+            record += 1 
+        end
+      end 
+      return number if record >= 2
+    end
+    return nil
+  end
+
 end
 
 class TicTacToeBoard
@@ -177,9 +203,9 @@ public
   end
 
   def game_is_over?
-    return "Tie Game" if unpicked_numbers.empty?
     return "#{user1.name}, you win!!" if user1.get_straight_number?
-    return "#{user2.name}, you are the true hero!!" if user2.get_straight_number?
+    return "#{user2.name}, is the true hero!!" if user2.get_straight_number?
+    return "Tie Game" if unpicked_numbers.empty?
     return false
   end
 
