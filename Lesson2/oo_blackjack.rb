@@ -196,11 +196,13 @@ class Deck
     system("clear")
     puts "<----------------  [ DECK ]  ----------------->"
     puts ""
-    
+
     format_string = "%16s"
+
     print format_string % dealer.name
-    players.each do |player|
-      print format_string % player.name
+    players.each_with_index do |player, index|
+      print_string = (index == current_player_index ? "-> " : "") + player.name
+      print format_string % print_string
     end
     puts ""
 
