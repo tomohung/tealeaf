@@ -28,8 +28,8 @@ class Player
   def get_score
     value = 0
     cards.each {|card| value += BlackJackRuler::CARDS[card[1]]}
-    has_card_A = !cards.select {|card| card[1] == "A"}.empty?
-    return value unless has_card_A
+    has_ace_card = !cards.select {|card| card[1] == "A"}.empty?
+    return value unless has_ace_card
     value + 10 > BlackJackRuler::BLACKJACK ? value : value + 10
   end
 
@@ -75,9 +75,14 @@ end
 
 class Dealer < RobotPlayer
   attr_accessor :players
+
+  def initialize(name, players)
+    super(name)
+    @players = players
+  end
+
   def hit?
     return false if busted? || blackjack?
-    #return false if players.select {|player| player.status == BlackJackRuler::STATUS[:unknown]}.empty?
 
     print "Now, Dealer's Action."
     2.times do
@@ -122,7 +127,7 @@ class Deck
   attr_accessor :dealer, :players, :cards, :current_player_index, :dealer_stop_hit
   def initialize(players)
     @players = players
-    @dealer = Dealer.new("Dealer")
+    @dealer = Dealer.new("Dealer", players)
     @cards = Cards.new
     @current_player_index = 0
     @dealer_stop_hit = false
@@ -157,7 +162,6 @@ class Deck
   end
 
   def asking_dealer_hit_again?
-    dealer.players = players
     if !dealer.hit?
       @dealer_stop_hit = true
       return false
