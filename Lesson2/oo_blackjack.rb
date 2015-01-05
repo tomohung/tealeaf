@@ -46,8 +46,8 @@ class Player
   end
 
   def hit?
-    puts "H) hit. or Anykey to stay:"
-    gets.chomp.downcase == 'h'
+    puts "Hit or Stay (y/n):"
+    gets.chomp.downcase == 'y'
   end
 end
 
