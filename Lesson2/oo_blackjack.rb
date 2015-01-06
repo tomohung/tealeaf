@@ -248,6 +248,7 @@ class BlackJackGame
   attr_accessor :deck, :players
 
   def initialize
+    @players = []
     create_players
     @deck = Deck.new(@players)
   end
@@ -257,7 +258,7 @@ class BlackJackGame
   end
 
   def create_players
-    @players = []
+    players.clear
     say "Players count: (1 ~ 4)"
     players_count = gets.chomp.to_i until (1..4).include?(players_count)
     
