@@ -13,7 +13,10 @@ Using polymorphism, I don't need to care about how using virtual function, just 
 Especially for method `super`, the best way to reduce redundant code. 
 One suggestion, If subclass's initialize method doesn't use super, then you might think the superclass and subclass relationship is `has-a`, not `is-a`.
 
-I do love my Tic-Tac-Toe and Black Jack implemented by OO. In Tic-Tac-Toe, I use polymorphism to implement single player and double players mode. In Black Jack, I add feature that player can play with others NPC together, not just with dealer. This make the game likely in the real world. Without OO concept, these features are hard to implement.
+I do love my [Tic-Tac-Toe][] and [Black Jack][] implemented by OO. In Tic-Tac-Toe, I use polymorphism to implement single player and double players mode. In Black Jack, I add feature that player can play with others NPC together, not just with dealer. This make the game likely in the real world. Without OO concept, these features are hard to implement.
+
+[Tic-Tac-Toe]: https://github.com/tomohung/tealeaf/blob/master/Lesson2/oo_tic_tac_toe.rb
+[Black Jack]: https://github.com/tomohung/tealeaf/blob/master/Lesson2/oo_blackjack.rb
 
 Next lesson is absolutely my challenge, because I'm totally new for web development.
 But I do look forward to it.
